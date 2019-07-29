@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
+const bodyParser = require('body-parser');
 const db = require('./providers/firebase');
 
 const app = express();
@@ -9,6 +10,9 @@ const app = express();
 app.use('/views', express.static('views'));
 
 dotenv.config();
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 // ===== ROUTES ===== //
 //Redireciona o fluxo para o user.js
