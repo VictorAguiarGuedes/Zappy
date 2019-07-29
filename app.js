@@ -5,6 +5,13 @@ const app = express();
 //Dando acesso aos arquivos estáticos
 app.use('/views', express.static('views'));
 
+// ===== ROUTES ===== //
+//Redireciona o fluxo para o user.js
+app.use('/api/user', require('./routes/user'))
+app.use('/api/message', require('./routes/message'))
+
+// ================= //
+
 // ===== VIEWS ===== //
 const getViewPath = (view) => {
     return path.join(__dirname, `./views/${view}/${view}.html`);
