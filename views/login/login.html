@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
+    <!-- O caminho é setado a partir do root do servidor, não da pasta atual -->
+    <link rel="stylesheet" href="/views/login/login.css">
 </head>
 <body>
-    <p>Login</p>
+    <form id="login-form">
+        <input type="text" name="username">
+        <input type="password" name="password">
+        <input type="submit" value="Entrar">
+    </form>
+    <script src="/views/login/login.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </body>
 </html>

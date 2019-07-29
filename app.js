@@ -1,9 +1,14 @@
 const express = require('express');
 const path = require('path');
+const dotenv = require('dotenv');
+const db = require('./providers/firebase');
+
 const app = express();
 
 //Dando acesso aos arquivos estáticos
 app.use('/views', express.static('views'));
+
+dotenv.config();
 
 // ===== ROUTES ===== //
 //Redireciona o fluxo para o user.js
