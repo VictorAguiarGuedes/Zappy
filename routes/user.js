@@ -2,6 +2,7 @@ const express = require('express');
 
 const db = require('../providers/firebase');
 const handleError = require('../providers/handle-error');
+const bcrypt = require('bcrypt');
 
 const app = express();
 const User = db.ref(`${process.env.FIREBASE_RULES}/users`);
@@ -50,8 +51,35 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.post('/login', (req, res) => {
-    // res.send('usuário');
+app.post('/login', async (req, res) => {
+    try {
+        //Validando dados ausentes
+        if(!req.body.username || !req.body.password){
+            handleError(res, null, 'missing-data');
+            return;
+        }
+        const user = 
+            (await User
+                .orderByChild('username')
+                .equalTo(req.body.username)
+                .once('value')).val();
+    
+        if(!user) {
+            handleError(res, null, 'user-not-found');
+            return;
+        }
+
+        const [ userId, userData ] = Object.entries(user)[0];
+
+        const match = await bcrypt.compare(req.body.password, userData.password);
+        if(match) {
+            res.send('ok');
+            return;
+        }
+        handleError(res, null, 'wrong-password');
+    } catch (error) {
+        
+    }
 });
 
 module.exports = app;
