@@ -10,7 +10,9 @@ gel('#login-form').addEventListener('submit', async (e) => {
         });
         //Aqui só será executado após o retorno do post, 
         //por estar dentro do async
-        console.log(response.data);
+        if(response.data === 'ok'){
+            window.location.replace('/');
+        }
     } catch (error) {
         console.log(error.response.data);
     }

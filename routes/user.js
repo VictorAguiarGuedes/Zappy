@@ -73,12 +73,58 @@ app.post('/login', async (req, res) => {
 
         const match = await bcrypt.compare(req.body.password, userData.password);
         if(match) {
+            req.session.userId = userId;
             res.send('ok');
             return;
         }
         handleError(res, null, 'wrong-password');
     } catch (error) {
-        
+        handleError(res, error, null);
+    }
+});
+
+// CONTACT
+
+app.post('/contact/:contact', async (req, res) => {
+    try {
+        const user = 
+            (await User
+                .orderByChild('username')
+                .equalTo(req.params.contact)
+                .once('value')).val();
+    
+        if(!user) {
+            handleError(res, null, 'user-not-found');
+            return;
+        }
+    
+        const [contactId, contactData] = Object.entries(user)[0];
+    
+        await User.child(req.session.userId).child('contacts').push({
+            alias: contactData.alias,
+            id: contactId
+        })
+
+        res.send('ok');
+    } catch (error) {
+        handleError(res, error, null);
+    }
+});
+
+app.get('/contact', async (req, res) => {
+    try {
+        const contactsFirebase = await User.child(req.session.userId).child('contacts').once('value');
+        const contacts = [];
+        contactsFirebase.forEach((contact) => {
+            contacts.push(contact.val());
+        });
+        if(req.query.length) {
+            res.send(''+contacts.length);
+            return;
+        }
+        res.send(contacts);
+    } catch (error) {
+        handleError(res, error, null);
     }
 });
 
